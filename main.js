@@ -106,6 +106,10 @@ function makeBook(bookObject) {
   red.setAttribute('id', `book-${bookObject.id}`);
   red.innerText = 'Hapus Buku';
 
+  red.addEventListener('click', function () {
+    removeBook(bookObject.id);
+  });
+
   action.append(green, red);
 
   const article = document.createElement('article');
@@ -135,6 +139,26 @@ function addBookToIncomplete (bookId) {
   bookTarget.isComplete = false;
   document.dispatchEvent(new Event(RENDER_EVENT));
   // saveData();
+}
+
+function removeBook(bookId) {
+  const bookTarget = findBookIndex(bookId);
+
+  if (bookTarget === -1) return;
+
+  books.splice(bookTarget, 1);
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  // saveData();
+}
+
+function findBookIndex(bookId) {
+  for (const index in books) {
+    if (books[index].id === bookId) {
+      return index;
+    }
+  }
+
+  return -1;
 }
 
 function findBook (bookId) {
