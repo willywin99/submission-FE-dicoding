@@ -89,8 +89,16 @@ function makeBook(bookObject) {
   
   if (bookObject.isComplete) {
     green.innerText = 'Belum Selesai dibaca';
+
+    green.addEventListener('click', function () {
+      addBookToIncomplete(bookObject.id);
+    });
   } else {
     green.innerText = 'Selesai dibaca';
+
+    green.addEventListener('click', function () {
+      addBookToComplete(bookObject.id);
+    });
   }
 
   const red = document.createElement('button');
@@ -105,4 +113,35 @@ function makeBook(bookObject) {
   article.append(textTitle, textAuthor, textYear, action);
 
   return article;
+}
+
+function addBookToComplete (bookId) {
+  const bookTarget = findBook(bookId);
+  // console.log(bookTarget);
+
+  if (bookTarget == null) return;
+
+  bookTarget.isComplete = true;
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  // saveData();
+}
+
+function addBookToIncomplete (bookId) {
+  const bookTarget = findBook(bookId);
+  // console.log(bookTarget);
+
+  if (bookTarget == null) return;
+
+  bookTarget.isComplete = false;
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  // saveData();
+}
+
+function findBook (bookId) {
+  for (const bookItem of books) {
+    if (bookItem.id === bookId) {
+      return bookItem;
+    }
+  }
+  return null;
 }
