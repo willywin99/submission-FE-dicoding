@@ -229,33 +229,47 @@ function searchBook() {
   console.log(data);
 
   if (searchBookTitle.value === '') {
-    // console.log(books);
+    temp = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    // console.log(temp);
+    document.addEventListener(SEARCH_EVENT, function () {
+      const incompleteBOOKList = document.getElementById('incompleteBookshelfList');
+      incompleteBOOKList.innerHTML = '';
+    
+      const completeBOOKList = document.getElementById('completeBookshelfList');
+      completeBOOKList.innerHTML = '';
+    
+      for (const bookItem of temp) {
+        const bookElement = makeBook(bookItem);
+        if (!bookItem.isComplete) {
+          incompleteBOOKList.append(bookElement);
+        } else {
+          completeBOOKList.append(bookElement);
+        }
+      }
+    });
+    document.dispatchEvent(new Event(SEARCH_EVENT));
   } else {
     for (index in data) {
       if (data[index].title.includes(searchBookTitle.value)) {
         temp.push(data[index]);
       }
     }
-  }
-
-  console.log(temp);
-
-  document.addEventListener(SEARCH_EVENT, function () {
-    const incompleteBOOKList = document.getElementById('incompleteBookshelfList');
-    incompleteBOOKList.innerHTML = '';
-  
-    const completeBOOKList = document.getElementById('completeBookshelfList');
-    completeBOOKList.innerHTML = '';
-  
-    for (const bookItem of temp) {
-      const bookElement = makeBook(bookItem);
-      if (!bookItem.isComplete) {
-        incompleteBOOKList.append(bookElement);
-      } else {
-        completeBOOKList.append(bookElement);
+    document.addEventListener(SEARCH_EVENT, function () {
+      const incompleteBOOKList = document.getElementById('incompleteBookshelfList');
+      incompleteBOOKList.innerHTML = '';
+    
+      const completeBOOKList = document.getElementById('completeBookshelfList');
+      completeBOOKList.innerHTML = '';
+    
+      for (const bookItem of temp) {
+        const bookElement = makeBook(bookItem);
+        if (!bookItem.isComplete) {
+          incompleteBOOKList.append(bookElement);
+        } else {
+          completeBOOKList.append(bookElement);
+        }
       }
-    }
-  });
-
-  document.dispatchEvent(new Event(SEARCH_EVENT));
+    });
+    document.dispatchEvent(new Event(SEARCH_EVENT));
+  }
 }
